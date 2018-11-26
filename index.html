@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Controlador de Tarefas</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+
+  <style>
+    .topo {
+      background: rgb(221, 221, 221);
+      padding: 10px;
+      align-items: center;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <!-- Content here -->
+
+    <div class="row topo">
+      <div class="col-8">
+        <h4>Lista de Tarefas</h4>
+      </div>
+      <div class="col-2">
+        <input type="checkbox" class="form-check-input" id="terminadas-check"> Mostrar Terminadas</div>
+      <div class="col-2">
+        <button type="button" class="btn btn-danger">Remover Terminadas</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container" id="tabela" >
+
+      <div class="row tabela">
+          <table class="table table-striped">
+    
+            <thead>
+              <tr>
+                <th scope="col">Terminada</th>
+                <th style="width: 70%" scope="col">Tarefa</th>
+                <th scope="col">Prazo</th>
+              </tr>
+            </thead>
+    
+            <tbody id="table-tarefas">
+              
+            </tbody>
+    
+          </table>
+    
+          <button type="button" class="btn btn-info btn-table-novaTarefa">Nova Tarefa</button>
+    
+        </div>
+
+  </div>
+
+  <div class="container" id="nova-tarefa" style="display: none">
+
+    <div class="row">
+      <h1>Nova Tarefa</h1>
+    </div>
+
+    <div class="row">
+
+      <form id="form-tarefa-create">
+          <div class="alert alert-danger" role="alert" style="display: none" id="error">
+              Preencha todos os campos!
+            </div>
+        <div class="form-group">
+          <label for="nomeTarefa">Tarefa</label>
+          <input type="text" class="form-control" name="nomeTarefa" id="nomeTarefa" placeholder="ex: Tarefa 1">
+        </div>
+        <div class="form-group">
+          <label for="dataPrazo">Prazo</label>
+          <input type="date" class="form-control" id="dataPrazo" name="dataPrazo">
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-cancelar">Canelar</button>
+
+        <button type="submit" class="btn btn-primary btn-nova-tabela">Nova Tarefa</button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  </div>
+
+  <script src="classes/Utils.js"></script>
+  <script src="models/Tarefa.js"></script>
+  <script src="controller/TarefasController.js"></script>
+  <script src="dist/js/index.js"></script>
+
+</body>
+
+</html>

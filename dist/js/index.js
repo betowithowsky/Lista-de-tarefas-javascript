@@ -1,0 +1,1 @@
+let tarefasController = new TarefasController("form-tarefa-create", "table-tarefas");
