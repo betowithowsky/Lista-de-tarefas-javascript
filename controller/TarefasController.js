@@ -8,7 +8,6 @@ class TarefasController {
         this.onSubmit();
         this.selectAll();
         this.addEventsButtons();
-        this.detectCheckBox();
     }
 
     onSubmit() {
@@ -100,14 +99,12 @@ class TarefasController {
         tr.dataset.tarefa = JSON.stringify(dataTarefa);
 
         tr.innerHTML = `<tr>
-        <th scope="row">
-            <input type="checkbox" id="terminadas-check" class="modifier" name="${dataTarefa.nomeTarefa}">
-            </th>
-            <td>${dataTarefa.nomeTarefa}</td>
-            <td>${dataTarefa._dataPrazo}</td>
-      </tr>`;
-
-        //this.addEventsTr(tr);
+                            <th scope="row">
+                                <input type="checkbox" id="terminadas-check" class="checkboxes" name="${dataTarefa.nomeTarefa}">
+                            </th>
+                            <td name="${dataTarefa.nomeTarefa}">${dataTarefa.nomeTarefa}</td>
+                            <td name="${dataTarefa.nomeTarefa}">${dataTarefa._dataPrazo}</td>
+                        </tr>`;
 
         return tr;
 
@@ -129,6 +126,18 @@ class TarefasController {
             this.showList();
 
         });
+
+        [...document.querySelectorAll('.checkboxes')].forEach((elem) => {
+            elem.addEventListener("click", e => {
+                this.finalizaTarefa(e.target || e.srcElement);
+
+            });
+        });
+
+        document.querySelector("#mostrar-terminadas").addEventListener("click", b => {
+            this.mostrarFinalizadas();
+        });
+
     }
 
     //mostra/oculta painel para criação de tarefa
@@ -143,20 +152,63 @@ class TarefasController {
 
         document.querySelector("#nova-tarefa").style.display = "none";
         document.querySelector("#tabela").style.display = "block";
+
     }
 
-    detectCheckBox() {
+    finalizaTarefa(dataTarefa) {
 
-        var check = document.getElementsByName("itemCheck");
+        //console.log(dataTarefa);
+        let txtName = dataTarefa.getAttribute("name");
+        let element = document.getElementsByName(txtName);
 
-        for (var i = 0; i < check.length; i++) {
-            if (check[i].checked == true) {
-                // CheckBox Marcado... Faça alguma coisa...
+        if (dataTarefa.checked == true) {
 
-            } else {
-                // CheckBox Não Marcado... Faça alguma outra coisa...
-            }
+            element[1].setAttribute("class", "terminado");
+            element[2].setAttribute("class", "terminado");
+
+        } else {
+
+            element[1].setAttribute("class", "");
+            element[2].setAttribute("class", "");
+
         }
+
+        var x = dataTarefa.parentElement;
+        var y = x.parentElement;
+
+        y.style.display = 'none';
+
+
+    }
+
+    mostrarFinalizadas(){
+
+        let x = document.getElementsByClassName("terminado");
+        let btn = document.getElementById("mostrar-terminadas");     
+
+        if(btn.checked == true){
+
+            for(let i = 0; i < x.length; i++){
+
+                let y = x[i].parentElement;
+    
+                y.style.display = 'table-row';
+    
+                console.log(y);
+            }
+
+        }else{
+            for(let i = 0; i < x.length; i++){
+
+                let y = x[i].parentElement;
+    
+                y.style.display = 'none';
+    
+                console.log(y);
+            }
+        }      
+
+        
     }
 
 }
