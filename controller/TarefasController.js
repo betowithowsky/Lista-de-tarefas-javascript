@@ -1,9 +1,10 @@
 class TarefasController {
 
-    constructor(formIdCreate, tableId) {
+    constructor(formIdCreate, tableId, tableFinalizadasId) {
 
         this.formElement = document.getElementById(formIdCreate);
         this.tableElement = document.getElementById(tableId);
+        this.tableFinalizadas = document.getElementById(tableFinalizadasId);
 
         this.onSubmit();
         this.selectAll();
@@ -16,7 +17,7 @@ class TarefasController {
 
             event.preventDefault(); //cancela comportamento padrão do forumalario
 
-            let values = this.getValues(this.formElement); //guarda valores da tabela na variavel values
+            let values = this.getValues(this.formElement); //guarda valores da formulario na variavel values
             let btn = this.formElement.querySelector(".btn-nova-tabela"); //guarda o botão submit na variavel btn
 
             btn.disabled = true; //desabilita botão para que não haja duplicação de dados.
@@ -87,7 +88,15 @@ class TarefasController {
 
         let tr = this.getTr(dataTarefa);
 
-        this.tableElement.appendChild(tr);
+        if(dataTarefa._terminada){
+
+            this.tableFinalizadas.appendChild(tr);
+
+        }else{
+
+            this.tableElement.appendChild(tr);
+
+        }
 
     }
 
@@ -98,15 +107,62 @@ class TarefasController {
 
         tr.dataset.tarefa = JSON.stringify(dataTarefa);
 
-        tr.innerHTML = `<tr>
+        if(dataTarefa._terminada){
+
+            tr.innerHTML = `<tr>
                             <th scope="row">
-                                <input type="checkbox" id="terminadas-check" class="checkboxes" name="${dataTarefa.nomeTarefa}">
+                                <input type="checkbox" id="${dataTarefa._id}" class="checkbox-finaliza" name="${dataTarefa.nomeTarefa}" checked>
                             </th>
-                            <td name="${dataTarefa.nomeTarefa}">${dataTarefa.nomeTarefa}</td>
-                            <td name="${dataTarefa.nomeTarefa}">${dataTarefa._dataPrazo}</td>
+                            <td class="terminado" name="${dataTarefa.nomeTarefa}">${dataTarefa.nomeTarefa}</td>
+                            <td class="terminado" name="${dataTarefa.nomeTarefa}">${dataTarefa._dataPrazo}</td>
                         </tr>`;
 
+        }else{
+
+            tr.innerHTML = `<tr>
+                            <th scope="row">
+                                <input type="checkbox" id="${dataTarefa._id}" class="checkbox-finaliza" name="${dataTarefa.nomeTarefa}">
+                            </th>
+                            <td class="" name="${dataTarefa.nomeTarefa}">${dataTarefa.nomeTarefa}</td>
+                            <td class="" name="${dataTarefa.nomeTarefa}">${dataTarefa._dataPrazo}</td>
+                        </tr>`;
+            
+        }
+
+        this.addEventTr(tr);                
+
         return tr;
+
+    }
+
+    addEventTr(tr){
+
+        tr.querySelector(".checkbox-finaliza").addEventListener("click", e =>{
+
+            var json = localStorage.getItem("tarefas"); //pega minhas tarefas do local storage e coloca na variavel json
+
+            json = JSON.parse(json); //parse converse o json de String para array JSON
+            
+
+            if(!json[e.target.id-1]._terminada == true){
+
+                json[e.target.id-1]._terminada = true;
+                tr.setAttribute("class", "terminado");
+                document.getElementById("table-tarefas-finalizadas").appendChild(tr);
+
+            }else{
+
+                json[e.target.id-1]._terminada = false;
+                tr.setAttribute("class", "");
+                document.getElementById("table-tarefas").appendChild(tr);
+
+            }
+
+            json = JSON.stringify(json); //converte o json para string
+
+            localStorage.setItem("tarefas", json); //devolve meu json para tarefas no localstorage
+
+        });
 
     }
 
@@ -125,13 +181,6 @@ class TarefasController {
             this.formElement.reset();
             this.showList();
 
-        });
-
-        [...document.querySelectorAll('.checkboxes')].forEach((elem) => {
-            elem.addEventListener("click", e => {
-                this.finalizaTarefa(e.target || e.srcElement);
-
-            });
         });
 
         document.querySelector("#mostrar-terminadas").addEventListener("click", b => {
@@ -155,60 +204,20 @@ class TarefasController {
 
     }
 
-    finalizaTarefa(dataTarefa) {
-
-        //console.log(dataTarefa);
-        let txtName = dataTarefa.getAttribute("name");
-        let element = document.getElementsByName(txtName);
-
-        if (dataTarefa.checked == true) {
-
-            element[1].setAttribute("class", "terminado");
-            element[2].setAttribute("class", "terminado");
-
-        } else {
-
-            element[1].setAttribute("class", "");
-            element[2].setAttribute("class", "");
-
-        }
-
-        var x = dataTarefa.parentElement;
-        var y = x.parentElement;
-
-        y.style.display = 'none';
-
-
-    }
-
     mostrarFinalizadas(){
 
-        let x = document.getElementsByClassName("terminado");
-        let btn = document.getElementById("mostrar-terminadas");     
+        if(document.querySelector("#tabela-finalizadas").style.display == "none"){
 
-        if(btn.checked == true){
-
-            for(let i = 0; i < x.length; i++){
-
-                let y = x[i].parentElement;
-    
-                y.style.display = 'table-row';
-    
-                console.log(y);
-            }
+            document.querySelector("#tabela-finalizadas").style.display = "block";
 
         }else{
-            for(let i = 0; i < x.length; i++){
 
-                let y = x[i].parentElement;
-    
-                y.style.display = 'none';
-    
-                console.log(y);
-            }
-        }      
+            document.querySelector("#tabela-finalizadas").style.display = "none";
 
+        }
         
+                     
+
     }
 
 }

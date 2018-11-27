@@ -1,1 +1,1 @@
-let tarefasController = new TarefasController("form-tarefa-create", "table-tarefas");
+let tarefasController = new TarefasController("form-tarefa-create", "table-tarefas", "table-tarefas-finalizadas");
