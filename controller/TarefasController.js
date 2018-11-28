@@ -88,11 +88,11 @@ class TarefasController {
 
         let tr = this.getTr(dataTarefa);
 
-        if(dataTarefa._terminada){
+        if (dataTarefa._terminada) {
 
             this.tableFinalizadas.appendChild(tr);
 
-        }else{
+        } else {
 
             this.tableElement.appendChild(tr);
 
@@ -107,7 +107,7 @@ class TarefasController {
 
         tr.dataset.tarefa = JSON.stringify(dataTarefa);
 
-        if(dataTarefa._terminada){
+        if (dataTarefa._terminada) {
 
             tr.innerHTML = `<tr>
                             <th scope="row">
@@ -117,7 +117,7 @@ class TarefasController {
                             <td class="terminado" name="${dataTarefa.nomeTarefa}">${dataTarefa._dataPrazo}</td>
                         </tr>`;
 
-        }else{
+        } else {
 
             tr.innerHTML = `<tr>
                             <th scope="row">
@@ -126,36 +126,46 @@ class TarefasController {
                             <td class="" name="${dataTarefa.nomeTarefa}">${dataTarefa.nomeTarefa}</td>
                             <td class="" name="${dataTarefa.nomeTarefa}">${dataTarefa._dataPrazo}</td>
                         </tr>`;
-            
+
         }
 
-        this.addEventTr(tr);                
+        this.addEventTr(tr);
 
         return tr;
 
     }
 
-    addEventTr(tr){
+    addEventTr(tr) {
 
-        tr.querySelector(".checkbox-finaliza").addEventListener("click", e =>{
+        tr.querySelector(".checkbox-finaliza").addEventListener("click", e => {
 
             var json = localStorage.getItem("tarefas"); //pega minhas tarefas do local storage e coloca na variavel json
 
-            json = JSON.parse(json); //parse converse o json de String para array JSON
-            
+            json = JSON.parse(json); //parse converte o json de String para array JSON
 
-            if(!json[e.target.id-1]._terminada == true){
+            //console.log(e.target.id);
+            //console.log(json[e.target.id]);
 
-                json[e.target.id-1]._terminada = true;
-                tr.setAttribute("class", "terminado");
-                document.getElementById("table-tarefas-finalizadas").appendChild(tr);
+            for (let i = 0; i < json.length; i++) {
 
-            }else{
+                if (e.target.id == json[i]._id) {
 
-                json[e.target.id-1]._terminada = false;
-                tr.setAttribute("class", "");
-                document.getElementById("table-tarefas").appendChild(tr);
+                    if (json[i]._terminada == false) {
+                        console.log(true);
+                        json[i]._terminada = true;
+                        tr.setAttribute("class", "terminado");
+                        document.getElementById("table-tarefas-finalizadas").appendChild(tr);
 
+                    } else {
+                        console.log(false);
+                        json[i]._terminada = false;
+                        tr.setAttribute("class", "");
+                        document.getElementById("table-tarefas").appendChild(tr);
+
+                    }
+
+
+                }
             }
 
             json = JSON.stringify(json); //converte o json para string
@@ -187,6 +197,34 @@ class TarefasController {
             this.mostrarFinalizadas();
         });
 
+        document.querySelector(".btn-deletar").addEventListener("click", e => {
+            if (confirm("deseja realmente excluir?")) {
+
+                //let tarefas = [];
+
+                let tarefas = JSON.parse(localStorage.getItem("tarefas"));
+
+                //let tarefas = Tarefa.getUsersStorage();   
+                //console.log(tarefas);
+
+                //tarefas.splice(0,1);
+
+                //console.log(tarefas);
+
+                tarefas.forEach((tarefaData, index) => {
+                    console.log(tarefaData);
+                    if (tarefaData._terminada == true) {
+                        tarefas.splice(index, tarefaData.length); //metodo nativo do javascript para excluir da lista
+                        var x = document.getElementById(tarefaData._id).parentElement;
+                        x.parentElement.remove();
+                    }
+                });
+
+                localStorage.setItem("tarefas", JSON.stringify(tarefas));
+
+            }
+        })
+
     }
 
     //mostra/oculta painel para criação de tarefa
@@ -204,19 +242,19 @@ class TarefasController {
 
     }
 
-    mostrarFinalizadas(){
+    mostrarFinalizadas() {
 
-        if(document.querySelector("#tabela-finalizadas").style.display == "none"){
+        if (document.querySelector("#tabela-finalizadas").style.display == "none") {
 
             document.querySelector("#tabela-finalizadas").style.display = "block";
 
-        }else{
+        } else {
 
             document.querySelector("#tabela-finalizadas").style.display = "none";
 
         }
-        
-                     
+
+
 
     }
 
