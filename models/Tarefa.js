@@ -105,12 +105,16 @@ class Tarefa {
 
     remove(){
 
-        let tarefas = Tarefa.getUsersStorage();
+        let tarefas = Tarefa.getTarefaStorage();
 
         tarefas.forEach((tarefaData, index) => {
-            if(this._id == tarefasData._id){
+
+            if(tarefaData._terminada == true){   
+                //console.log(tarefaData);
                 tarefas.splice(index, 1);
+
             }
+
         });
 
         localStorage.setItem("tarefas", JSON.stringify(tarefas));

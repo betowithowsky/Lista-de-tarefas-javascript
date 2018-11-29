@@ -35,6 +35,7 @@ class TarefasController {
             btn.disabled = false; //habilita o botão novamente para um novo envio de dados.
             this.showList();
             document.querySelector("#error").style.display = "none";
+            document.querySelector(".alert-success").style.display = "block";
 
         });
     }
@@ -143,21 +144,16 @@ class TarefasController {
 
             json = JSON.parse(json); //parse converte o json de String para array JSON
 
-            //console.log(e.target.id);
-            //console.log(json[e.target.id]);
-
             for (let i = 0; i < json.length; i++) {
 
                 if (e.target.id == json[i]._id) {
 
                     if (json[i]._terminada == false) {
-                        console.log(true);
                         json[i]._terminada = true;
                         tr.setAttribute("class", "terminado");
                         document.getElementById("table-tarefas-finalizadas").appendChild(tr);
 
                     } else {
-                        console.log(false);
                         json[i]._terminada = false;
                         tr.setAttribute("class", "");
                         document.getElementById("table-tarefas").appendChild(tr);
@@ -200,24 +196,18 @@ class TarefasController {
         document.querySelector(".btn-deletar").addEventListener("click", e => {
             if (confirm("deseja realmente excluir?")) {
 
-                //let tarefas = [];
-
                 let tarefas = JSON.parse(localStorage.getItem("tarefas"));
 
-                //let tarefas = Tarefa.getUsersStorage();   
-                //console.log(tarefas);
+                tarefas.slice(0).forEach((tarefaData, index) => {
 
-                //tarefas.splice(0,1);
-
-                //console.log(tarefas);
-
-                tarefas.forEach((tarefaData, index) => {
-                    console.log(tarefaData);
                     if (tarefaData._terminada == true) {
-                        tarefas.splice(index, tarefaData.length); //metodo nativo do javascript para excluir da lista
+                        
+                        document.querySelector(".alert-remover").style.display = "block";
+                        tarefas.splice(tarefas.indexOf(tarefaData), 1);                       
                         var x = document.getElementById(tarefaData._id).parentElement;
                         x.parentElement.remove();
                     }
+
                 });
 
                 localStorage.setItem("tarefas", JSON.stringify(tarefas));
@@ -229,6 +219,10 @@ class TarefasController {
 
     //mostra/oculta painel para criação de tarefa
     showPanelCreate() {
+        
+        //alerts
+        document.querySelector(".alert-remover").style.display = "none";
+        document.querySelector(".alert-success").style.display = "none";
 
         document.querySelector("#nova-tarefa").style.display = "block";
         document.querySelector("#tabela").style.display = "none";
